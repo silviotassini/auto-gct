@@ -1,6 +1,8 @@
 # Automações Google (Calendar & Tasks)
 
-Scripts em Python para gerenciar eventos do Google Agenda e tarefas do Google Tasks diretamente pelo terminal.
+Scripts em Python para gerenciar eventos do Google Agenda e tarefas do Google Tasks diretamente pelo terminal. 
+Com esses scripts e uma Skill apropriada para o agente Hermes, pode se usar o Telegrma, por exemplo, 
+para tratar eventos e tarefas do Google.
 
 ## 📋 Pré-requisitos
 
@@ -67,7 +69,6 @@ python main.py tarefas remover --id "ID_DA_TAREFA"
 
 ## 🛠️ Funções Principais
 
-- `validar_data`: Garante que as datas inseridas via CLI estejam no formato `DD-MM-AAAA`.
 - `modulo eventos`: Gerencia integração com a API do Calendar.
 - `modulo tarefas`: Gerencia integração com a API do Tasks.
 
