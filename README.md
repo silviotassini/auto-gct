@@ -9,9 +9,8 @@ para tratar eventos e tarefas do Google.
 1. **Credenciais API**: Tenha o arquivo `credentials.json` na raiz do projeto.
 2. **Ambiente Virtual**:
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
+   uv venv
+   uv sync google-api-python-client google-auth-httplib2 google-auth-oauthlib
    ```
 
 ## 🚀 Como usar
@@ -23,24 +22,24 @@ O script principal é o `main.py`. Ele utiliza subcomandos para separar as funci
 **Listar eventos:**
 ```bash
 # Próximos 10 eventos
-python main.py eventos listar
+uv run main.py eventos listar
 
 # Eventos em um intervalo de datas (DD-MM-AAAA)
-python main.py eventos listar -di 20-05-2026 -df 25-05-2026
+uv run main.py eventos listar -di 20-05-2026 -df 25-05-2026
 
 # Definir quantidade ou dias à frente
-python main.py eventos listar -n 5
-python main.py eventos listar --dias 7
+uv run main.py eventos listar -n 5
+uv run main.py eventos listar --dias 7
 ```
 
 **Criar evento:**
 ```bash
-python main.py eventos criar --titulo "Reunião de Perícia" --data 20-05-2026 --hora_inicio 14:00 --hora_fim 15:00 --descricao "Análise de logs de rede"
+uv run main.py eventos criar --titulo "Reunião de Perícia" --data 20-05-2026 --hora_inicio 14:00 --hora_fim 15:00 --descricao "Análise de logs de rede"
 ```
 
 **Remover evento:**
 ```bash
-python main.py eventos remover --id "ID_DO_EVENTO"
+uv run main.py eventos remover --id "ID_DO_EVENTO"
 ```
 
 ---
@@ -49,22 +48,22 @@ python main.py eventos remover --id "ID_DO_EVENTO"
 
 **Listar tarefas:**
 ```bash
-python main.py tarefas listar
+uv run main.py tarefas listar
 ```
 
 **Criar tarefa:**
 ```bash
-python main.py tarefas criar --titulo "Relatório Final" --descricao "Enviar para o tribunal" --data_limite 2026-05-22T23:59:00Z
+uv run main.py tarefas criar --titulo "Relatório Final" --descricao "Enviar para o tribunal" --data_limite 2026-05-22T23:59:00Z
 ```
 
 **Concluir tarefa:**
 ```bash
-python main.py tarefas concluir --id "ID_DA_TAREFA"
+uv run main.py tarefas concluir --id "ID_DA_TAREFA"
 ```
 
 **Remover tarefa:**
 ```bash
-python main.py tarefas remover --id "ID_DA_TAREFA"
+uv run main.py tarefas remover --id "ID_DA_TAREFA"
 ```
 
 ## 🛠️ Funções Principais
