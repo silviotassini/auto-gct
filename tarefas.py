@@ -12,53 +12,56 @@ def formatar_data_google(data):
     ).strftime("%d-%m-%Y")
     
 def listar_tarefas():
+    try:
+        service = obter_servico_tasks()
+        resultado_listas = service.tasklists().list().execute()
+        listas = resultado_listas.get('items', [])
 
-    service = obter_servico_tasks()
-    resultado_listas = service.tasklists().list().execute()
-    listas = resultado_listas.get('items', [])
-
-    if not listas:
-        print("Nenhuma lista encontrada.")
-        return None
-
-    resultado_final = []
-    for lista in listas:
-
-        nome_lista = lista['title']
-        lista_id = lista['id']
-
-        print(f"LISTA: {nome_lista}")
-
-        resultado_tarefas = service.tasks().list(
-            tasklist=lista_id
-        ).execute()
-
-        tarefas = resultado_tarefas.get('items', [])
-
-        if not tarefas:
-            print("Nenhuma tarefa.")
-            continue
-
-        for tarefa in tarefas:
-            print("ID:", tarefa.get('id'))
-            print("Título:", tarefa.get('title'))
-            print("Status:", tarefa.get('status'))
-
-            if 'due' in tarefa:
-                print("Prazo:", formatar_data_google(tarefa['due']))
-            tarefa_formatada = {
-                "title": tarefa.get("title"),
-                "status": tarefa.get("status"),
-                "updated": tarefa.get("updated"),
-                "due": formatar_data_google(tarefa.get("due")),
-                "webViewLink": tarefa.get("webViewLink")
+        if not listas:
+            return {
+                "sucesso": True,
+                "tarefas": []
             }
 
-            resultado_final.append(
-                tarefa_formatada
-            )
+        resultado_final = []
+        for lista in listas:
+            nome_lista = lista['title']
+            lista_id = lista['id']
 
-    return resultado_final
+            print(f"LISTA: {nome_lista}")
+
+            resultado_tarefas = service.tasks().list(
+                tasklist=lista_id
+            ).execute()
+
+            tarefas = resultado_tarefas.get('items', [])
+
+            if not tarefas:
+                print("Nenhuma tarefa.")
+                continue
+
+            for tarefa in tarefas:
+                tarefa_formatada = {
+                    "id": tarefa.get('id'),
+                    "title": tarefa.get("title"),
+                    "status": tarefa.get("status"),
+                    "updated": tarefa.get("updated"),
+                    "due": formatar_data_google(tarefa.get("due")),
+                    "webViewLink": tarefa.get("webViewLink")
+                }
+
+                resultado_final.append(tarefa_formatada)
+
+        return {
+            "sucesso": True,
+            "tarefas": resultado_final
+        }
+
+    except Exception as e:
+        return {
+            "sucesso": False,
+            "mensagem": str(e)
+        }
 
 
 def criar_tarefa(
@@ -66,60 +69,87 @@ def criar_tarefa(
     descricao=None,
     data_limite=None
 ):
+    try:
+        service = obter_servico_tasks()
 
-    service = obter_servico_tasks()
+        tarefa = {
+            'title': titulo
+        }
 
-    tarefa = {
-        'title': titulo
-    }
+        if descricao:
+            tarefa['notes'] = descricao
 
-    if descricao:
-        tarefa['notes'] = descricao
+        if data_limite:
+            data = datetime.strptime(
+                data_limite,
+                "%d-%m-%Y"
+            )
 
-    if data_limite:
-        data = datetime.strptime(
-            data_limite,
-            "%d-%m-%Y"
-        )
+            tarefa['due'] = data.isoformat() + 'Z'
 
-        tarefa['due'] = data.isoformat() + 'Z'
+        resultado = service.tasks().insert(
+            tasklist='@default',
+            body=tarefa
+        ).execute()
 
-    resultado = service.tasks().insert(
-        tasklist='@default',
-        body=tarefa
-    ).execute()
+        return {
+            "sucesso": True,
+            "mensagem": "Tarefa criada.",
+            "id": resultado['id']
+        }
 
-    print("Tarefa criada.")
-    print("ID:", resultado['id'])
+    except Exception as e:
+        return {
+            "sucesso": False,
+            "mensagem": str(e)
+        }
 
 
 def remover_tarefa(task_id):
+    try:
 
-    service = obter_servico_tasks()
+        service = obter_servico_tasks()
 
-    service.tasks().delete(
-        tasklist='@default',
-        task=task_id
-    ).execute()
+        service.tasks().delete(
+            tasklist='@default',
+            task=task_id
+        ).execute()
+        return {
+            "sucesso": True,
+            "mensagem": "Tarefa removida."
+        }
 
-    print("Tarefa removida.")
+    except Exception as e:
+        return {
+            "sucesso": False,
+            "mensagem": str(e)
+        }
 
 
 def concluir_tarefa(task_id):
+    try:
+        service = obter_servico_tasks()
 
-    service = obter_servico_tasks()
+        tarefa = service.tasks().get(
+            tasklist='@default',
+            task=task_id
+        ).execute()
 
-    tarefa = service.tasks().get(
-        tasklist='@default',
-        task=task_id
-    ).execute()
+        tarefa['status'] = 'completed'
 
-    tarefa['status'] = 'completed'
+        service.tasks().update(
+            tasklist='@default',
+            task=task_id,
+            body=tarefa
+        ).execute()
 
-    service.tasks().update(
-        tasklist='@default',
-        task=task_id,
-        body=tarefa
-    ).execute()
+        return {
+            "sucesso": True,
+            "mensagem": "Tarefa concluída."
+        }
 
-    print("Tarefa concluída.")
+    except Exception as e:
+        return {
+            "sucesso": False,
+            "mensagem": str(e)
+        }
