@@ -106,7 +106,7 @@ def listar_eventos(
                 "titulo": evento.get('summary'),
                 "inicio": formatar_data_google(inicio_evento),
             })
-
+        
         return {
             "sucesso": True,
             "eventos": resultado_final

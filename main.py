@@ -31,137 +31,139 @@ def validar_data(valor):
         )
 
 
-parser = argparse.ArgumentParser()
+def main():
 
-subparsers = parser.add_subparsers(
-    dest="modulo",
-    required=True
-)
+    parser = argparse.ArgumentParser()
 
-# =========================================================
-# EVENTOS
-# =========================================================
+    subparsers = parser.add_subparsers(
+        dest="modulo",
+        required=True
+    )
 
-parser_eventos = subparsers.add_parser("eventos")
+    # =========================================================
+    # EVENTOS
+    # =========================================================
 
-sub_eventos = parser_eventos.add_subparsers(
-    dest="acao",
-    required=True
-)
+    parser_eventos = subparsers.add_parser("eventos")
 
-# LISTAR EVENTOS
+    sub_eventos = parser_eventos.add_subparsers(
+        dest="acao",
+        required=True
+    )
 
-listar_ev = sub_eventos.add_parser("listar")
+    # LISTAR EVENTOS
 
-listar_ev.add_argument("-di", "--data_inicial", type=validar_data)
-listar_ev.add_argument("-df", "--data_final", type=validar_data)
-listar_ev.add_argument("-n", "--numero_eventos", type=int)
-listar_ev.add_argument("--dias", type=int)
+    listar_ev = sub_eventos.add_parser("listar")
 
-# CRIAR EVENTO
+    listar_ev.add_argument("-di", "--data_inicial", type=validar_data)
+    listar_ev.add_argument("-df", "--data_final", type=validar_data)
+    listar_ev.add_argument("-n", "--numero_eventos", type=int)
+    listar_ev.add_argument("--dias", type=int)
 
-criar_ev = sub_eventos.add_parser("criar")
+    # CRIAR EVENTO
 
-criar_ev.add_argument("--titulo", required=True)
-criar_ev.add_argument("--data", required=True)
-criar_ev.add_argument("--hora_inicio", required=True)
-criar_ev.add_argument("--hora_fim", required=True)
-criar_ev.add_argument("--descricao")
+    criar_ev = sub_eventos.add_parser("criar")
 
-# REMOVER EVENTO
+    criar_ev.add_argument("--titulo", required=True)
+    criar_ev.add_argument("--data", required=True)
+    criar_ev.add_argument("--hora_inicio", required=True)
+    criar_ev.add_argument("--hora_fim", required=True)
+    criar_ev.add_argument("--descricao")
 
-remover_ev = sub_eventos.add_parser("remover")
+    # REMOVER EVENTO
 
-remover_ev.add_argument("--id", required=True)
+    remover_ev = sub_eventos.add_parser("remover")
 
-# =========================================================
-# TAREFAS
-# =========================================================
+    remover_ev.add_argument("--id", required=True)
 
-parser_tarefas = subparsers.add_parser("tarefas")
+    # =========================================================
+    # TAREFAS
+    # =========================================================
 
-sub_tarefas = parser_tarefas.add_subparsers(
-    dest="acao",
-    required=True
-)
+    parser_tarefas = subparsers.add_parser("tarefas")
 
-# LISTAR
+    sub_tarefas = parser_tarefas.add_subparsers(
+        dest="acao",
+        required=True
+    )
 
-listar_tf = sub_tarefas.add_parser("listar")
+    # LISTAR
 
-# CRIAR
+    listar_tf = sub_tarefas.add_parser("listar")
 
-criar_tf = sub_tarefas.add_parser("criar")
+    # CRIAR
 
-criar_tf.add_argument("--titulo", required=True)
-criar_tf.add_argument("--descricao")
-criar_tf.add_argument("--data_limite")
+    criar_tf = sub_tarefas.add_parser("criar")
 
-# REMOVER
+    criar_tf.add_argument("--titulo", required=True)
+    criar_tf.add_argument("--descricao")
+    criar_tf.add_argument("--data_limite")
 
-remover_tf = sub_tarefas.add_parser("remover")
+    # REMOVER
 
-remover_tf.add_argument("--id", required=True)
+    remover_tf = sub_tarefas.add_parser("remover")
 
-# CONCLUIR
+    remover_tf.add_argument("--id", required=True)
 
-concluir_tf = sub_tarefas.add_parser("concluir")
+    # CONCLUIR
 
-concluir_tf.add_argument("--id", required=True)
+    concluir_tf = sub_tarefas.add_parser("concluir")
 
-# =========================================================
-# EXECUÇÃO
-# =========================================================
+    concluir_tf.add_argument("--id", required=True)
 
-args = parser.parse_args()
+    # =========================================================
+    # EXECUÇÃO
+    # =========================================================
 
-# EVENTOS
+    args = parser.parse_args()
 
-if args.modulo == "eventos":
+    # EVENTOS
 
-    if args.acao == "listar":
+    if args.modulo == "eventos":
 
-        listar_eventos(
-            data_inicial=args.data_inicial,
-            data_final=args.data_final,
-            numero_eventos=args.numero_eventos,
-            dias=args.dias
-        )
+        if args.acao == "listar":
+            resultado = listar_eventos(
+                data_inicial=args.data_inicial,
+                data_final=args.data_final,
+                numero_eventos=args.numero_eventos,
+                dias=args.dias
+            )
 
-    elif args.acao == "criar":
+        elif args.acao == "criar":
+            resultado = criar_evento(
+                titulo=args.titulo,
+                data=args.data,
+                hora_inicio=args.hora_inicio,
+                hora_fim=args.hora_fim,
+                descricao=args.descricao
+            )
 
-        criar_evento(
-            titulo=args.titulo,
-            data=args.data,
-            hora_inicio=args.hora_inicio,
-            hora_fim=args.hora_fim,
-            descricao=args.descricao
-        )
+        elif args.acao == "remover":
+            resultado = remover_evento(args.id)
 
-    elif args.acao == "remover":
+    # TAREFAS
 
-        remover_evento(args.id)
+    elif args.modulo == "tarefas":
 
-# TAREFAS
+        if args.acao == "listar":
+            resultado = listar_tarefas()
 
-elif args.modulo == "tarefas":
+        elif args.acao == "criar":
+            resultado = criar_tarefa(
+                titulo=args.titulo,
+                descricao=args.descricao,
+                data_limite=args.data_limite
+            )
 
-    if args.acao == "listar":
+        elif args.acao == "remover":
+            resultado = remover_tarefa(args.id)
 
-        listar_tarefas()
+        elif args.acao == "concluir":
+            resultado = concluir_tarefa(args.id)
+        
+    return resultado
 
-    elif args.acao == "criar":
-
-        criar_tarefa(
-            titulo=args.titulo,
-            descricao=args.descricao,
-            data_limite=args.data_limite
-        )
-
-    elif args.acao == "remover":
-
-        remover_tarefa(args.id)
-
-    elif args.acao == "concluir":
-
-        concluir_tarefa(args.id)
+if __name__ == "__main__":
+    resultado = main()
+    if resultado is not None:
+        print(resultado)
