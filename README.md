@@ -1,75 +1,75 @@
-# Automações Google (Calendar & Tasks)
+# Google Automation (Calendar & Tasks)
 
-Scripts em Python para gerenciar eventos do Google Agenda e tarefas do Google Tasks diretamente pelo terminal. 
-Com esses scripts e uma Skill apropriada para o agente Hermes, pode se usar o Telegrma, por exemplo, 
-para tratar eventos e tarefas do Google.
+Python scripts to manage Google Calendar events and Google Tasks directly from the terminal.
+With these scripts and an appropriate Skill for the Hermes agent, it is possible to use Telegram, for example,
+to handle Google events and tasks.
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-1. **Credenciais API**: Tenha o arquivo `credentials.json` na raiz do projeto.
-2. **Ambiente Virtual**:
+1. **API Credentials**: Keep the `credentials.json` file in the project root.
+2. **Virtual Environment**:
    ```bash
    uv venv
    uv sync google-api-python-client google-auth-httplib2 google-auth-oauthlib
    ```
 
-## 🚀 Como usar
+## 🚀 How to use
 
-O script principal é o `main.py`. Ele utiliza subcomandos para separar as funcionalidades.
+The main script is `main.py`. It uses subcommands to separate functionalities.
 
-### 📅 Eventos (Google Calendar)
+### 📅 Events (Google Calendar)
 
-**Listar eventos:**
+**List events:**
 ```bash
-# Próximos 10 eventos
+# Next 10 events
 uv run main.py eventos listar
 
-# Eventos em um intervalo de datas (DD-MM-AAAA)
+# Events in a date range (DD-MM-AAAA)
 uv run main.py eventos listar -di 20-05-2026 -df 25-05-2026
 
-# Definir quantidade ou dias à frente
+# Define number of days ahead
 uv run main.py eventos listar -n 5
 uv run main.py eventos listar --dias 7
 ```
 
-**Criar evento:**
+**Create event:**
 ```bash
 uv run main.py eventos criar --titulo "Reunião de Perícia" --data 20-05-2026 --hora_inicio 14:00 --hora_fim 15:00 --descricao "Análise de logs de rede"
 ```
 
-**Remover evento:**
+**Remove event:**
 ```bash
 uv run main.py eventos remover --id "ID_DO_EVENTO"
 ```
 
 ---
 
-### ✅ Tarefas (Google Tasks)
+### ✅ Tasks (Google Tasks)
 
-**Listar tarefas:**
+**List tasks:**
 ```bash
 uv run main.py tarefas listar
 ```
 
-**Criar tarefa:**
+**Create task:**
 ```bash
 uv run main.py tarefas criar --titulo "Relatório Final" --descricao "Enviar para o tribunal" --data_limite 2026-05-22T23:59:00Z
 ```
 
-**Concluir tarefa:**
+**Complete task:**
 ```bash
 uv run main.py tarefas concluir --id "ID_DA_TAREFA"
 ```
 
-**Remover tarefa:**
+**Remove task:**
 ```bash
 uv run main.py tarefas remover --id "ID_DA_TAREFA"
 ```
 
-## 🛠️ Funções Principais
+## 🛠️ Main Features
 
-- `modulo eventos`: Gerencia integração com a API do Calendar.
-- `modulo tarefas`: Gerencia integração com a API do Tasks.
+- `events module`: Manages integration with the Calendar API.
+- `tasks module`: Manages integration with the Tasks API.
 
 ---
-*Nota: Na primeira execução, o navegador será aberto para autorizar o acesso à sua conta Google. O token será salvo em `token.json`.*
+*Note: On the first run, the browser will open so you can authorize access to your Google account. The token will be saved in `token.json`.*
