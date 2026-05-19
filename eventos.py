@@ -1,6 +1,7 @@
+import dataclasses
 from datetime import datetime, timedelta, timezone
-
 from servicos import obter_servico_calendar
+from zoneinfo import ZoneInfo
 
 def formatar_data_google(data):
 
@@ -121,8 +122,9 @@ def listar_eventos(
 
 def criar_evento(
     titulo,
-    data,
+    data_inicio,
     hora_inicio,
+    data_fim,
     hora_fim,
     descricao=None
 ):
@@ -130,24 +132,28 @@ def criar_evento(
 
         service = obter_servico_calendar()
 
+        tz_sp = ZoneInfo("America/Sao_Paulo")
+
         inicio = datetime.strptime(
-            f"{data} {hora_inicio}",
+            f"{data_inicio} {hora_inicio}",
             "%d-%m-%Y %H:%M"
-        ).replace(tzinfo=timezone.utc)
+        ).replace(tzinfo=tz_sp)
 
         fim = datetime.strptime(
-            f"{data} {hora_fim}",
+            f"{data_fim} {hora_fim}",
             "%d-%m-%Y %H:%M"
-        ).replace(tzinfo=timezone.utc)
+        ).replace(tzinfo=tz_sp)
 
         evento = {
             'summary': titulo,
             'description': descricao,
             'start': {
-                'dateTime': inicio.isoformat()
+                'dateTime': inicio.isoformat(),
+                'timeZone': 'America/Sao_Paulo'
             },
             'end': {
-                'dateTime': fim.isoformat()
+                'dateTime': fim.isoformat(),
+                'timeZone': 'America/Sao_Paulo'
             }
         }
 

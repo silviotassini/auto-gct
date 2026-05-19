@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from zoneinfo import ZoneInfo
 from servicos import obter_servico_tasks
 
 def formatar_data_google(data):
@@ -79,13 +79,15 @@ def criar_tarefa(
         if descricao:
             tarefa['notes'] = descricao
 
+        tz_sp = ZoneInfo("America/Sao_Paulo")
+
         if data_limite:
             data = datetime.strptime(
                 data_limite,
                 "%d-%m-%Y"
-            )
+            ).replace(tzinfo=tz_sp)
 
-            tarefa['due'] = data.isoformat() + 'Z'
+            tarefa['due'] = data.isoformat()
 
         resultado = service.tasks().insert(
             tasklist='@default',

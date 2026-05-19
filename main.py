@@ -65,8 +65,9 @@ def main():
     criar_ev = sub_eventos.add_parser("criar")
 
     criar_ev.add_argument("--titulo", required=True)
-    criar_ev.add_argument("--data", required=True)
+    criar_ev.add_argument("--data_inicio", required=True)
     criar_ev.add_argument("--hora_inicio", required=True)
+    criar_ev.add_argument("--data_fim", required=True)
     criar_ev.add_argument("--hora_fim", required=True)
     criar_ev.add_argument("--descricao")
 
@@ -132,8 +133,9 @@ def main():
         elif args.acao == "criar":
             resultado = criar_evento(
                 titulo=args.titulo,
-                data=args.data,
+                data_inicio=args.data_inicio,
                 hora_inicio=args.hora_inicio,
+                data_fim=args.data_fim,
                 hora_fim=args.hora_fim,
                 descricao=args.descricao
             )
